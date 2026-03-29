@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
     UserDetails findByUsername(String username);
 
+    Optional<User> findByGithubId(String githubId);
+
 }

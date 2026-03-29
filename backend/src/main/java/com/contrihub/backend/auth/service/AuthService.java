@@ -1,29 +1,29 @@
 package com.contrihub.backend.auth.service;
 
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.contrihub.backend.auth.dto.AuthResponse;
 import com.contrihub.backend.auth.dto.LoginRequest;
 import com.contrihub.backend.auth.dto.RegisterRequest;
 import com.contrihub.backend.auth.exception.*;
+import com.contrihub.backend.auth.model.AuthType;
 import com.contrihub.backend.auth.model.Role;
 import com.contrihub.backend.auth.model.User;
 import com.contrihub.backend.auth.repository.UserRepository;
 import com.contrihub.backend.security.JwtService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    // Register user : 
+    // Check for the email and username -> unique
+    // Password + salt -> encode
     public AuthResponse register(RegisterRequest request) {
 
         if(userRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -36,6 +36,7 @@ public class AuthService {
         .firstName(request.getFirstName())
         .lastName(request.getLastName())
         .role(Role.USER)
+        .authType(AuthType.SIMPLE)
         .email(request.getEmail())
         .build();
 
@@ -43,15 +44,9 @@ public class AuthService {
         return toRespone(newUser);
     }
 
-    // This method changes user model to auth response dto
-    private AuthResponse toRespone(User newUser) {
-        return AuthResponse.builder()
-        .email(newUser.getEmail())
-        .token(jwtService.generateToken(newUser))
-        .role(newUser.getRole().name())
-        .build();
-    }
-
+    // Login User :
+    // Check for the email -> exists
+    // Password + salt -> encode -> match
     public AuthResponse login(LoginRequest request) {
         if(userRepository.findByEmail(request.getEmail()).isEmpty()) {
             throw new UserNotFoundException("User with this email does not exist");
@@ -63,6 +58,15 @@ public class AuthService {
         }
 
         return toRespone(user);
+    }
+
+    // This method changes user model to auth response dto
+    private AuthResponse toRespone(User newUser) {
+        return AuthResponse.builder()
+        .email(newUser.getEmail())
+        .token(jwtService.generateToken(newUser))
+        .role(newUser.getRole().name())
+        .build();
     }
 
     

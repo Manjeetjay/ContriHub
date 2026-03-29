@@ -29,10 +29,15 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
     private String password;
+
+    @Column(unique = true)
+    private String githubId;
+    private String githubAccessToken;
+    private String avatarUrl;
 
     @Enumerated(EnumType.STRING)
     private AuthType authType;
@@ -59,7 +64,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return email != null ? email : githubId;
     }
 
     @Override
