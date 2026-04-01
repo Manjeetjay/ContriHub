@@ -38,7 +38,7 @@ public class AuthController {
 
     @PostMapping("/github")
     public ResponseEntity<AuthResponse> githubLogin(@RequestBody GithubOAuthRequest request) {
-        AuthResponse response = gitHubOAuthService.authenticateWithGitHub(request.getCode());
+        AuthResponse response = gitHubOAuthService.authenticateWithGitHub(request.getCode(), request.getRedirectUri());
         return ResponseEntity.ok(response);
     }
 

@@ -42,8 +42,8 @@ public class GitHubOAuthService {
 
     // ─── Public API ─────────────────────────────────────────────
 
-    public AuthResponse authenticateWithGitHub(String code) {
-        String accessToken = exchangeCodeForToken(code);
+    public AuthResponse authenticateWithGitHub(String code, String redirectUri) {
+        String accessToken = exchangeCodeForToken(code, redirectUri);
         Map<String, Object> profile = fetchUserProfile(accessToken);
 
         String githubId = String.valueOf(profile.get("id"));
@@ -65,7 +65,7 @@ public class GitHubOAuthService {
 
     // ─── GitHub API Calls ───────────────────────────────────────
 
-    private String exchangeCodeForToken(String code) {
+    private String exchangeCodeForToken(String code, String redirectUri) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
@@ -73,6 +73,9 @@ public class GitHubOAuthService {
         body.put("client_id", clientId);
         body.put("client_secret", clientSecret);
         body.put("code", code);
+        if (redirectUri != null && !redirectUri.isBlank()) {
+            body.put("redirect_uri", redirectUri);
+        }
 
         ResponseEntity<Map> response = restTemplate.postForEntity(
                 GITHUB_TOKEN_URL, new HttpEntity<>(body, headers), Map.class);

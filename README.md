@@ -20,3 +20,13 @@
 
 ## Tech Stack
 SpringBoot, React, Tailwind CSS, PostgreSQL, Redis, Kafka
+
+## Contributing
+We welcome contributions from the community! Whether it's a bug fix, new feature, or documentation update, your help is appreciated.
+Please read our [Contributing Guidelines](CONTRIBUTING.md) to get started with the setup and learn about our branching strategy and submission process.
+
+## Community
+We are committed to providing a welcoming and inspiring experience for all. Please review our [Code of Conduct](CODE_OF_CONDUCT.md) to understand our community standards.
+
+## License
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
